@@ -1,0 +1,61 @@
+---
+version: 2.1
+
+# ----------------
+# Orbs declaration
+# ----------------
+
+orbs:
+
+  noos-ci: noosenergy/noos-ci@0.1.11
+
+
+# --------------
+# Pipeline tasks
+# --------------
+
+jobs:
+
+  lint-package:
+    executor: noos-ci/default
+    steps:
+      - checkout
+      - noos-ci/python-lint-package
+
+  test-package:
+    executor: noos-ci/default
+    steps:
+      - checkout
+      - noos-ci/python-test-package
+      - store_test_results:
+          path: "."
+
+  build-wheel:
+    executor: noos-ci/default
+    steps:
+      - checkout
+      - noos-ci/python-build-wheel
+      - store_artifacts:
+          path: dist
+          destination: wheel
+
+
+# -----------------
+# Pipeline workflow
+# -----------------
+
+workflows:
+
+  version: 2
+
+  lint-test-build-publish:
+    jobs:
+      - lint-package
+      - test-package
+      - build-wheel:
+          requires:
+            - lint-package
+            - test-package
+          filters:
+            branches:
+              only: master

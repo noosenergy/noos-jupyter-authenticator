@@ -1,0 +1,27 @@
+# Python
+__pycache__
+
+# Pypi
+build
+dist
+*.egg-info
+pip-wheel-metadata
+
+# Pipenv
+.env
+
+# PyTest
+.pytest_cache
+pytest.xml
+
+# MyPy
+.mypy_cache
+
+# PyCharm
+.idea
+.vscode
+
+# MacOS
+.DS_Store
+.localized
+*~
