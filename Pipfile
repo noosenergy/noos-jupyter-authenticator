@@ -1,0 +1,31 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[requires]
+python_full_version = "3.8.6"
+
+[pipenv]
+allow_prereleases = true
+
+[packages]
+# Third-party dependencies already defined within `setup.py`
+
+[dev-packages]
+# Symlink to project root
+neptune-jupyter-auth = {editable = true, path = "."}
+# Format
+black = "*"
+isort = "*"
+# Linter
+pydocstyle = "*"
+flake8 = "*"
+mypy = "*"
+# Testing
+pytest = "*"
+pytest-mock = "*"
+pytest-asyncio = "*"
+# Debugging
+ipdb = "*"
+ipython = "*"
