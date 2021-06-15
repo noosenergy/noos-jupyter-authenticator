@@ -14,7 +14,7 @@ allow_prereleases = true
 
 [dev-packages]
 # Symlink to project root
-neptune-jupyter-auth = {editable = true, path = "."}
+jupyterauth-neptune = {editable = true, path = "."}
 # Format
 black = "*"
 isort = "*"

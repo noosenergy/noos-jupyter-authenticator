@@ -15,10 +15,10 @@ REQUIREMENTS = [
 
 setup_args = dict(
     # Description
-    name="neptune-jupyter-auth",
+    name="jupyterauth-neptune",
     version=VERSION,
     # Credentials
-    url="https://github.com/noosenergy/neptune-jupyter-auth",
+    url="https://github.com/noosenergy/jupyterauth-neptune",
     license="Proprietary",
     # Package data
     package_dir={"": "src"},
