@@ -1,6 +1,6 @@
 import pytest
 
-from neptune_jupyter_auth import authenticator
+from jupyterauth_neptune import authenticator
 
 
 @pytest.fixture
