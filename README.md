@@ -1,6 +1,6 @@
-[![CircleCI](https://circleci.com/gh/noosenergy/neptune-jupyter-auth.svg?style=svg&circle-token=f44ebd5b7c018ad366db0b750369693974874d82)](https://circleci.com/gh/noosenergy/neptune-jupyter-auth)
+[![CircleCI](https://circleci.com/gh/noosenergy/jupyterauth-neptune.svg?style=svg&circle-token=f44ebd5b7c018ad366db0b750369693974874d82)](https://circleci.com/gh/noosenergy/jupyterauth-neptune)
 
-# Neptune Jupyter Auth
+# Jupyterauth Neptune
 
 Custom JupyterHub `Authenticator` subclass, to enable authentication of [Jupyter hub](https://github.com/noosenergy/neptune-jupyter-hub) via the [auth gateway](https://github.com/noosenergy/neptune-gateway) service.
 

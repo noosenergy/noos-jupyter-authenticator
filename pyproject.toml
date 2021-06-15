@@ -8,5 +8,5 @@ profile = "black"
 multi_line_output = 3
 lines_after_imports = 2
 default_section = "THIRDPARTY"
-known_first_party = "neptune_jupyter_auth,tests"
+known_first_party = "jupyterauth_neptune,tests"
 sections = "STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
