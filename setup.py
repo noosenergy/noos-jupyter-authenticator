@@ -4,10 +4,11 @@
 from setuptools import find_packages, setup
 
 
-VERSION = "0.1"
+VERSION = "0.2"
 
 REQUIREMENTS = [
     "jupyterhub>=0.8",
+    "pyjwt",
     "tornado",
     "traitlets",
 ]
