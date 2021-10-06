@@ -1,1 +1,1 @@
-from .authenticator import *  # noqa
+from .authenticators import *  # noqa

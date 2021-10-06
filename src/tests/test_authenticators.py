@@ -1,12 +1,12 @@
 import pytest
 from tornado import web
 
-from jupyterauth_neptune import authenticator
+from jupyterauth_neptune import authenticators
 
 
 class TestNeptuneAuthenticator:
     def test_register_handlers(self, mocker):
-        auth = authenticator.NeptuneAuthenticator()
+        auth = authenticators.NeptuneAuthenticator()
 
         handlers = auth.get_handlers(mocker.Mock())
 
@@ -16,7 +16,7 @@ class TestNeptuneAuthenticator:
     @pytest.mark.asyncio
     async def test_authenticate_not_implemented(self, mocked_handler):
         handler = mocked_handler()
-        auth = authenticator.NeptuneAuthenticator()
+        auth = authenticators.NeptuneAuthenticator()
 
         with pytest.raises(NotImplementedError):
             await auth.get_authenticated_user(handler, None)
@@ -26,7 +26,7 @@ class TestNeptuneBasicAuthenticator:
     @pytest.mark.asyncio
     async def test_missing_authorization_header(self, mocked_handler):
         handler = mocked_handler()
-        auth = authenticator.NeptuneBasicAuthenticator(auth_header_name="test-header")
+        auth = authenticators.NeptuneBasicAuthenticator(auth_header_name="test-header")
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
@@ -35,7 +35,7 @@ class TestNeptuneBasicAuthenticator:
     @pytest.mark.asyncio
     async def test_authenticate_user(self, mocked_handler):
         handler = mocked_handler({"test-header": "test.user"})
-        auth = authenticator.NeptuneBasicAuthenticator(auth_header_name="test-header")
+        auth = authenticators.NeptuneBasicAuthenticator(auth_header_name="test-header")
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
@@ -44,7 +44,7 @@ class TestNeptuneBasicAuthenticator:
     @pytest.mark.asyncio
     async def test_authenticate_admin_user(self, mocked_handler):
         handler = mocked_handler({"test-header": "admin.user"})
-        auth = authenticator.NeptuneBasicAuthenticator(auth_header_name="test-header")
+        auth = authenticators.NeptuneBasicAuthenticator(auth_header_name="test-header")
         auth.admin_users = {"admin.user"}
 
         authenticated = await auth.get_authenticated_user(handler, None)
@@ -56,7 +56,7 @@ class TestNeptuneJWTAuthenticator:
     @pytest.mark.asyncio
     async def test_missing_authorization_header(self, mocked_handler):
         handler = mocked_handler()
-        auth = authenticator.NeptuneJWTAuthenticator(auth_header_name="test-header")
+        auth = authenticators.NeptuneJWTAuthenticator(auth_header_name="test-header")
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
@@ -72,7 +72,7 @@ class TestNeptuneJWTAuthenticator:
     @pytest.mark.asyncio
     async def test_invalid_authorization_header_type(self, header, scheme, mocked_handler):
         handler = mocked_handler({header: scheme})
-        auth = authenticator.NeptuneJWTAuthenticator(
+        auth = authenticators.NeptuneJWTAuthenticator(
             auth_header_name=header, auth_header_type="bearer"
         )
 
@@ -83,7 +83,7 @@ class TestNeptuneJWTAuthenticator:
     async def test_fail_to_decode_token(self, mocked_jwt, mocked_handler):
         token = mocked_jwt("secret_key_1", {"test-claim": "test_value"})
         handler = mocked_handler({"test-header": f"bearer {token}"})
-        auth = authenticator.NeptuneJWTAuthenticator(
+        auth = authenticators.NeptuneJWTAuthenticator(
             auth_header_name="test-header", auth_header_type="bearer", secret_key="secret_key_2"
         )
 
@@ -93,8 +93,8 @@ class TestNeptuneJWTAuthenticator:
     @pytest.mark.asyncio
     async def test_authenticate_user(self, mocked_jwt, mocked_handler):
         token = mocked_jwt("secret_key", {"username": "test.user", "is_admin": False})
-        handler = mocked_handler({"X-Forwarded-Token": f"Bearer {token}"})
-        auth = authenticator.NeptuneJWTAuthenticator(secret_key="secret_key")
+        handler = mocked_handler({"X-Forwarded-Auth": f"Bearer {token}"})
+        auth = authenticators.NeptuneJWTAuthenticator(secret_key="secret_key")
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
@@ -103,8 +103,8 @@ class TestNeptuneJWTAuthenticator:
     @pytest.mark.asyncio
     async def test_authenticate_admin_user(self, mocked_jwt, mocked_handler):
         token = mocked_jwt("secret_key", {"username": "admin.user", "is_admin": True})
-        handler = mocked_handler({"X-Forwarded-Token": f"Bearer {token}"})
-        auth = authenticator.NeptuneJWTAuthenticator(secret_key="secret_key")
+        handler = mocked_handler({"X-Forwarded-Auth": f"Bearer {token}"})
+        auth = authenticators.NeptuneJWTAuthenticator(secret_key="secret_key")
 
         authenticated = await auth.get_authenticated_user(handler, None)
 

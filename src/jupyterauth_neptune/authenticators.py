@@ -2,10 +2,10 @@ from typing import List, Optional, Tuple, TypedDict
 
 import jwt
 from jupyterhub import auth, handlers, utils
-from tornado import gen, httputil, web
+from tornado import gen, web
 from traitlets import Unicode
 
-from . import handler
+from .handlers import NeptuneLoginHandler
 
 
 __all__ = ["NeptuneBasicAuthenticator", "NeptuneJWTAuthenticator"]
@@ -25,7 +25,7 @@ class NeptuneAuthenticator(auth.Authenticator):
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
-    login_handler = handler.NeptuneLoginHandler
+    login_handler = NeptuneLoginHandler
     login_service = "Neptune Gateway"
 
     auth_path = "/auto_login"
@@ -45,14 +45,14 @@ class NeptuneAuthenticator(auth.Authenticator):
 
 
 class NeptuneBasicAuthenticator(NeptuneAuthenticator):
-    """Null Jupyterhub Authenticator.
+    """Remote user Jupyterhub Authenticator.
 
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
     auth_header_name = Unicode(
         config=True,
-        default_value="X-Forwarded-User",
+        default_value="X-Forwarded-Auth",
         help="The HTTP header to inspect from the forwarded request.",
     )
 
@@ -69,14 +69,15 @@ class NeptuneBasicAuthenticator(NeptuneAuthenticator):
 
 
 class NeptuneJWTAuthenticator(NeptuneAuthenticator):
-    """JWT-based Jupyterhub Authenticator.
+    """Remote user JWT-based Jupyterhub Authenticator.
 
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
+    # Header settings
     auth_header_name = Unicode(
         config=True,
-        default_value="X-Forwarded-Token",
+        default_value="X-Forwarded-Auth",
         help="The HTTP header to inspect from the forwarded request.",
     )
     auth_header_type = Unicode(
@@ -85,9 +86,16 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
         help="The type of HTTP header to be inspected.",
     )
 
+    # JWT settings
     secret_key = Unicode(
         config=True,
+        default_value="noosenergy",
         help="The shared secret key for signing the JWT tokens.",
+    )
+    encoding_algorithm = Unicode(
+        config=False,
+        default_value="HS256",
+        help="The encoding algorithm for validating the JWT signature.",
     )
     name_claim_field = Unicode(
         config=True,
@@ -103,7 +111,7 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
     @gen.coroutine
     def authenticate(self, handler: web.RequestHandler, *args) -> Optional[UserInfo]:
         """Authenticate the request and return a UserInfo dict."""
-        header = self._get_header(handler.request)
+        header = handler.request.headers.get(self.auth_header_name)
         if not header:
             return None
 
@@ -111,10 +119,6 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
         return self._get_userinfo(token)
 
     # Helpers:
-    def _get_header(self, request: httputil.HTTPServerRequest) -> Optional[str]:
-        """Extract the header containing the token from the given request."""
-        return request.headers.get(self.auth_header_name)
-
     def _get_token(self, header: str) -> str:
         """Extract a token from the given header value."""
         parts = header.split()
@@ -131,15 +135,15 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
         """Attempt to find and return user infos from the given token."""
         # Only implemented with a symetric key for encoding / decoding
         try:
-            claim_set = jwt.decode(token, self.secret_key, algorithms=["HS256"])
+            claims = jwt.decode(token, self.secret_key, algorithms=[self.encoding_algorithm])
         except Exception:
             raise web.HTTPError(401, "Invalid decoded JWT.")
 
-        username = claim_set.get(self.name_claim_field)
-        if not username:
+        name = claims.get(self.name_claim_field)
+        if not name:
             raise web.HTTPError(401, "Missing name claim field.")
 
         return {
-            "name": username,
-            "admin": claim_set.get(self.admin_claim_field),
+            "name": name,
+            "admin": claims.get(self.admin_claim_field),
         }
