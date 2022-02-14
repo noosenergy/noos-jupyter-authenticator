@@ -80,31 +80,31 @@ class TestNeptuneJWTAuthenticator:
             await auth.get_authenticated_user(handler, None)
 
     @pytest.mark.asyncio
-    async def test_fail_to_decode_token(self, mocked_jwt, mocked_handler):
-        token = mocked_jwt("secret_key_1", {"test-claim": "test_value"})
-        handler = mocked_handler({"test-header": f"bearer {token}"})
+    async def test_fail_to_decode_token(self, mocked_client, mocked_handler):
+        mocked_client(raise_error=True)
+        handler = mocked_handler({"test-header": "bearer myToken"})
         auth = authenticators.NeptuneJWTAuthenticator(
-            auth_header_name="test-header", auth_header_type="bearer", secret_key="secret_key_2"
+            auth_header_name="test-header", auth_header_type="bearer"
         )
 
         with pytest.raises(web.HTTPError):
             await auth.get_authenticated_user(handler, None)
 
     @pytest.mark.asyncio
-    async def test_authenticate_user(self, mocked_jwt, mocked_handler):
-        token = mocked_jwt("secret_key", {"username": "test.user", "is_admin": False})
-        handler = mocked_handler({"X-Forwarded-Auth": f"Bearer {token}"})
-        auth = authenticators.NeptuneJWTAuthenticator(secret_key="secret_key")
+    async def test_authenticate_user(self, mocked_client, mocked_handler):
+        mocked_client(payload={"email": "test.user", "is_superuser": False})
+        handler = mocked_handler({"X-Forwarded-Auth": "Bearer myToken"})
+        auth = authenticators.NeptuneJWTAuthenticator()
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
         assert authenticated == {"name": "test.user", "admin": False, "auth_state": None}
 
     @pytest.mark.asyncio
-    async def test_authenticate_admin_user(self, mocked_jwt, mocked_handler):
-        token = mocked_jwt("secret_key", {"username": "admin.user", "is_admin": True})
-        handler = mocked_handler({"X-Forwarded-Auth": f"Bearer {token}"})
-        auth = authenticators.NeptuneJWTAuthenticator(secret_key="secret_key")
+    async def test_authenticate_admin_user(self, mocked_client, mocked_handler):
+        mocked_client(payload={"email": "admin.user", "is_superuser": True})
+        handler = mocked_handler({"X-Forwarded-Auth": "Bearer myToken"})
+        auth = authenticators.NeptuneJWTAuthenticator()
 
         authenticated = await auth.get_authenticated_user(handler, None)
 
