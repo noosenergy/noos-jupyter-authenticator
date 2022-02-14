@@ -8,7 +8,7 @@ VERSION = "0.2"
 
 REQUIREMENTS = [
     "jupyterhub>=0.8",
-    "pyjwt",
+    "noos-pyk",
     "tornado",
     "traitlets",
 ]
