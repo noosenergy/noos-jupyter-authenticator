@@ -1,10 +1,12 @@
 from typing import List, Optional, Tuple, TypedDict
 
-import jwt
 from jupyterhub import auth, handlers, utils
 from tornado import gen, web
 from traitlets import Unicode
 
+from noos_pyk.clients import http
+
+from .clients import NeptuneClient
 from .handlers import NeptuneLoginHandler
 
 
@@ -74,7 +76,7 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
-    # Header settings
+    # Neptune authentication
     auth_header_name = Unicode(
         config=True,
         default_value="X-Forwarded-Auth",
@@ -85,26 +87,21 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
         default_value="Bearer",
         help="The type of HTTP header to be inspected.",
     )
+    auth_server_url = Unicode(
+        config=True,
+        default_value="http://api.neptune-gateway/",
+        help="The URL for the Neptune authentication server.",
+    )
 
     # JWT settings
-    secret_key = Unicode(
-        config=True,
-        default_value="noosenergy",
-        help="The shared secret key for signing the JWT tokens.",
-    )
-    encoding_algorithm = Unicode(
-        config=False,
-        default_value="HS256",
-        help="The encoding algorithm for validating the JWT signature.",
-    )
     name_claim_field = Unicode(
         config=True,
-        default_value="username",
+        default_value="email",
         help="The decoded claim field that contains the user name.",
     )
     admin_claim_field = Unicode(
         config=True,
-        default_value="is_admin",
+        default_value="is_superuser",
         help="The decoded claim field that defines whether a user is an admin.",
     )
 
@@ -133,10 +130,12 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
 
     def _get_userinfo(self, token: str) -> UserInfo:
         """Attempt to find and return user infos from the given token."""
-        # Only implemented with a symetric key for encoding / decoding
+        client = NeptuneClient(base_url=self.auth_server_url)
+        client.set_auth_header(token)
+
         try:
-            claims = jwt.decode(token, self.secret_key, algorithms=[self.encoding_algorithm])
-        except Exception:
+            claims = client.whoami()
+        except http.HTTPError:
             raise web.HTTPError(401, "Invalid decoded JWT.")
 
         name = claims.get(self.name_claim_field)
