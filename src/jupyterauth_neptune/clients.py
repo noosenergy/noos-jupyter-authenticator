@@ -18,4 +18,4 @@ class NeptuneClient(json.JSONClient, auth.AuthClient):
 
     def whoami(self) -> Dict[str, Any]:
         """Return infos about the authenticated user."""
-        return self.post(path="v1/accounts/whoami/", statuses=(http_client.OK,))
+        return self.get(path="v1/accounts/whoami/", statuses=(http_client.OK,))
