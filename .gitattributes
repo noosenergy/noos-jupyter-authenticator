@@ -1,2 +1,2 @@
 # Automatically collapse generated files
-Pipfile.lock linguist-generated=true
+poetry.lock linguist-generated=true
