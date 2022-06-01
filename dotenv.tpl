@@ -1,1 +1,2 @@
 PYTHONBREAKPOINT=ipdb.set_trace
+NOOSINV_PYTHON_INSTALL=poetry

@@ -7,15 +7,18 @@ dist
 *.egg-info
 pip-wheel-metadata
 
-# Pipenv
-.env
-
 # PyTest
 .pytest_cache
 pytest.xml
 
 # MyPy
 .mypy_cache
+
+# Poetry
+.venv
+
+# Shell
+.env
 
 # PyCharm
 .idea
