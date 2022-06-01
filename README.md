@@ -2,38 +2,37 @@
 
 # Jupyterauth Neptune
 
-Custom JupyterHub `Authenticator` subclass, to enable authentication of [Jupyter hub](https://github.com/noosenergy/neptune-jupyter-hub) via the [auth gateway](https://github.com/noosenergy/neptune-gateway) service.
+Custom JupyterHub `Authenticator` subclass, to enable authentication of [Jupyter hub](https://jupyter.org/hub) via the Neptune platform.
 
 
-## Quickstart
+## Installation
 
-Similarly to the rest of the Neptune stack, the application must be deployed onto a machine running:
+The python package is available from the [PyPi repository](https://pypi.org/project/jupyterauth-neptune),
 
-    - Python 3.8.6
-    - a C compiler (either `gcc` via Homebrew, or `xcode` via the App store)
-
-
-### Local installation
-
-Ensure [Pyenv](https://github.com/pyenv/pyenv) and [Pipenv](https://docs.pipenv.org/) are installed:
-
-    $ brew install pyenv
-    $ brew install pipenv
-
-Lock the Python dependencies to build a virtualenv:
-
-    $ pipenv lock
-
-Build and enter your virtualenv:
-
-    $ pipenv sync --dev
-    $ pipenv shell
-
-### Local development
-
-The development workflows of this project can be managed by [noos-invoke](https://github.com/noosenergy/noos-invoke), a ready-made CLI for common CI/CD tasks.
-
+```sh
+pip install jupyterauth-neptune
 ```
-$ noosinv
-Usage: noosinv [--core-opts] <subcommand> [--subcommand-opts] ...
+
+
+## Development
+
+On Mac OSX, make sure [poetry](https://python-poetry.org/) has been installed and pre-configured,
+
+```sh
+brew install poetry
+```
+
+This project is shipped with a Makefile, which is ready to do basic common tasks.
+
+```shell
+~$ make
+help                           Display this auto-generated help message
+update                         Lock and install build dependencies
+clean                          Clean project from temp files / dirs
+format                         Run auto-formatting linters
+install                        Install build dependencies from lock file
+lint                           Run python linters
+test                           Run pytest with all tests
+package                        Build project wheel distribution
+release                        Publish wheel distribution to PyPi
 ```
