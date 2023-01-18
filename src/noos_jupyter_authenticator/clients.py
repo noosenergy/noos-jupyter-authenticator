@@ -4,17 +4,17 @@ from typing import Any, Dict
 from noos_pyk.clients import auth, json
 
 
-class NeptuneAuth(auth.HTTPTokenAuth):
-    """Authentication class for the Neptune gateway REST API."""
+class NoosGatewayAuth(auth.HTTPTokenAuth):
+    """Authentication class for the Noos gateway REST API."""
 
     default_header = "Authorization"
     default_value = "Bearer"
 
 
-class NeptuneClient(json.JSONClient, auth.AuthClient):
-    """Client for the Neptune gateway REST API."""
+class NoosGatewayClient(json.JSONClient, auth.AuthClient):
+    """Client for the Noos gateway REST API."""
 
-    default_auth_class = NeptuneAuth
+    default_auth_class = NoosGatewayAuth
 
     def whoami(self) -> Dict[str, Any]:
         """Return infos about the authenticated user."""

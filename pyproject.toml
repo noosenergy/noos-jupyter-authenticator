@@ -4,17 +4,17 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 # Description
-name = "jupyterauth-neptune"
-version = "0.2"
-description = "Custom JupyterHub authenticator for the Neptune platform."
+name = "noos-jupyter-authenticator"
+version = "0.1.0"
+description = "JupyterHub authenticator for the Noos platform."
 # Credentials
 license = "MIT"
 authors = ["Noos Energy <contact@noos.energy>"]
-homepage = "https://github.com/noosenergy/jupyterauth-neptune"
+homepage = "https://github.com/noosenergy/noos-jupyter-authenticator"
 # Package data
 readme = "README.md"
 packages = [
-    { include = "jupyterauth_neptune", from = "src" },
+    { include = "noos_jupyter_authenticator", from = "src" },
 ]
 # Distribution
 classifiers = [
@@ -26,9 +26,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+[tool.poetry.plugins."jupyterhub.authenticators"] 
+noos-basic = "noos_jupyter_authenticator:NoosBasicAuthenticator"
+noos-jwt = "noos_jupyter_authenticator:NoosJWTAuthenticator"
+
 [tool.poetry.dependencies]
 python = "^3.8"
-jupyterhub = ">=0.8"
+jupyterhub = "^3.0.0"
 noos-pyk = "*"
 tornado = "*"
 traitlets = "*"
@@ -59,7 +63,7 @@ profile = "black"
 multi_line_output = 3
 lines_after_imports = 2
 default_section = "THIRDPARTY"
-known_first_party = "noos_pyk,jupyterauth_neptune,tests"
+known_first_party = "noos_pyk,noos_jupyter_authenticator,tests"
 sections = "STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
 
 [tool.mypy]

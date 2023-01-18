@@ -1,13 +1,25 @@
 ---
 version: 2.1
 
+default:
+  install: &poetry-install
+    pkg-manager: poetry
+    install-args: ''
+  filter: &filter-tags-only
+    filters:
+      tags:
+        # ONLY git tag compliant format: e.g. `0.0.1-alpha.01`
+        only: /[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/
+      branches:
+        ignore: /.*/
+
 # ----------------
 # Orbs declaration
 # ----------------
 
 orbs:
 
-  noos-ci: noosenergy/noos-ci@0.1.14
+  noos-ci: noosenergy/noos-ci@0.1.15
 
 
 # --------------
@@ -21,16 +33,14 @@ jobs:
     steps:
       - checkout
       - noos-ci/python-lint-package:
-          pkg-manager: poetry
-          install-args: ''
+          <<: *poetry-install
 
   test-package:
     executor: noos-ci/default
     steps:
       - checkout
       - noos-ci/python-test-package:
-          pkg-manager: poetry
-          install-args: ''
+          <<: *poetry-install
       - store_test_results:
           path: "."
 
@@ -39,8 +49,7 @@ jobs:
     steps:
       - checkout
       - noos-ci/python-build-wheel:
-          pkg-manager: poetry
-          install-args: ''
+          <<: *poetry-install
       - store_artifacts:
           path: dist
           destination: wheel
@@ -50,8 +59,7 @@ jobs:
     steps:
       - checkout
       - noos-ci/python-publish-wheel:
-          pkg-manager: poetry
-          install-args: ''
+          <<: *poetry-install
 
 
 # -----------------
@@ -75,18 +83,9 @@ workflows:
     jobs:
       - approve-for-publishing:
           type: approval
-          filters:
-            tags:
-              # ONLY git tag compliant format: e.g. `0.0.1-alpha.01`
-              only: /[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/
-            branches:
-              ignore: /.*/
+          <<: *filter-tags-only
       - publish-wheel:
-          context: PYPI_SHARED
           requires:
             - approve-for-publishing
-          filters:
-            tags:
-              only: /[0-9]+(\.[0-9]+)*(-alpha\.[0-9]+)?/
-            branches:
-              ignore: /.*/
+          context: PYPI_SHARED
+          <<: *filter-tags-only

@@ -6,11 +6,11 @@ from traitlets import Unicode
 
 from noos_pyk.clients import http
 
-from .clients import NeptuneClient
-from .handlers import NeptuneLoginHandler
+from .clients import NoosGatewayClient
+from .handlers import NoosLoginHandler
 
 
-__all__ = ["NeptuneBasicAuthenticator", "NeptuneJWTAuthenticator"]
+__all__ = ["NoosBasicAuthenticator", "NoosJWTAuthenticator"]
 
 
 UrlHandler = Tuple[str, handlers.BaseHandler]
@@ -21,14 +21,14 @@ class UserInfo(TypedDict):
     admin: Optional[bool]
 
 
-class NeptuneAuthenticator(auth.Authenticator):
-    """Auto-login Jupyterhub Authenticator.
+class NoosAuthenticator(auth.Authenticator):
+    """Auto-login JupyterHub Authenticator.
 
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
-    login_handler = NeptuneLoginHandler
-    login_service = "Neptune Gateway"
+    login_handler = NoosLoginHandler
+    login_service = "Noos Gateway"
 
     auth_path = "/auto_login"
 
@@ -46,8 +46,8 @@ class NeptuneAuthenticator(auth.Authenticator):
         raise NotImplementedError
 
 
-class NeptuneBasicAuthenticator(NeptuneAuthenticator):
-    """Remote user Jupyterhub Authenticator.
+class NoosBasicAuthenticator(NoosAuthenticator):
+    """Remote user header-based JupyterHub Authenticator.
 
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
@@ -70,13 +70,13 @@ class NeptuneBasicAuthenticator(NeptuneAuthenticator):
         }
 
 
-class NeptuneJWTAuthenticator(NeptuneAuthenticator):
-    """Remote user JWT-based Jupyterhub Authenticator.
+class NoosJWTAuthenticator(NoosAuthenticator):
+    """Remote user JWT-based JupyterHub Authenticator.
 
     Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/auth.py
     """
 
-    # Neptune authentication
+    # Gateway authentication
     auth_header_name = Unicode(
         config=True,
         default_value="X-Forwarded-Auth",
@@ -90,7 +90,7 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
     auth_server_url = Unicode(
         config=True,
         default_value="http://api.neptune-gateway/",
-        help="The URL for the Neptune authentication server.",
+        help="The URL for the Noos gateway server.",
     )
 
     # JWT settings
@@ -130,7 +130,7 @@ class NeptuneJWTAuthenticator(NeptuneAuthenticator):
 
     def _get_userinfo(self, token: str) -> UserInfo:
         """Attempt to find and return user infos from the given token."""
-        client = NeptuneClient(base_url=self.auth_server_url)
+        client = NoosGatewayClient(base_url=self.auth_server_url)
         client.set_auth_header(token)
 
         try:
