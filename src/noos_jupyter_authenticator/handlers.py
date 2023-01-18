@@ -2,10 +2,10 @@ from jupyterhub import handlers
 from tornado import web
 
 
-class NeptuneLoginHandler(handlers.BaseHandler):
-    """Custom Jupyter hub auto-login handler.
+class NoosLoginHandler(handlers.BaseHandler):
+    """Custom JupyterHub auto-login handler.
 
-    Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/handlers/login.py#L124
+    Ref: https://github.com/jupyterhub/jupyterhub/blob/master/jupyterhub/handlers/login.py
     """
 
     async def get(self) -> None:
