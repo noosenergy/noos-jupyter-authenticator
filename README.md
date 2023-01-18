@@ -1,20 +1,36 @@
-[![CircleCI](https://circleci.com/gh/noosenergy/jupyterauth-neptune.svg?style=svg&circle-token=f44ebd5b7c018ad366db0b750369693974874d82)](https://circleci.com/gh/noosenergy/jupyterauth-neptune)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/noosenergy/noos-jupyter-authenticator/tree/master.svg?style=svg&circle-token=34ea00fda6c7b93facecbbd26d3a1d7ef1cda9d3)](https://dl.circleci.com/status-badge/redirect/gh/noosenergy/noos-jupyter-authenticator/tree/master)
 
-# Jupyterauth Neptune
+# Noos JupyterHub Authenticator
 
-Custom JupyterHub `Authenticator` subclass, to enable authentication of [Jupyter hub](https://jupyter.org/hub) via the Neptune platform.
+Bespoke JupyterHub `Authenticator`, to enable authentication of [Jupyter hub](https://jupyter.org/hub) via the Noos platform.
 
 
 ## Installation
 
-The python package is available from the [PyPi repository](https://pypi.org/project/jupyterauth-neptune),
+The python package is available from the [PyPi repository](https://pypi.org/project/noos-jupyter-authenticator),
 
 ```sh
-pip install jupyterauth-neptune
+pip install noos-jupyter-authenticator
 ```
+
+## Configuration
+
+Edit your `jupyterhub_config.py` file and add the following to register `noos_jupyter_authenticator` as a JupyterHub Authenticator class:
+
+```python
+c.Authenticator.auto_login = True
+
+c.JupyterHub.authenticator_class = "noos-jwt"
+
+c.NoosJWTAuthenticator.auth_server_url = "http://<hostname>"
+```
+
+:warning: This Authenticator only works with `jupyterhub >= 3.0.0`.
 
 
 ## Development
+
+### Python package manager
 
 On Mac OSX, make sure [poetry](https://python-poetry.org/) has been installed and pre-configured,
 
@@ -22,17 +38,11 @@ On Mac OSX, make sure [poetry](https://python-poetry.org/) has been installed an
 brew install poetry
 ```
 
-This project is shipped with a Makefile, which is ready to do basic common tasks.
+### Local dev workflows
 
-```shell
-~$ make
-help                           Display this auto-generated help message
-update                         Lock and install build dependencies
-clean                          Clean project from temp files / dirs
-format                         Run auto-formatting linters
-install                        Install build dependencies from lock file
-lint                           Run python linters
-test                           Run pytest with all tests
-package                        Build project wheel distribution
-release                        Publish wheel distribution to PyPi
+The development workflows of this project can be managed by [noos-invoke](https://github.com/noosenergy/noos-invoke), a ready-made CLI for common CI/CD tasks.
+
+```
+$ noosinv
+Usage: noosinv [--core-opts] <subcommand> [--subcommand-opts] ...
 ```
