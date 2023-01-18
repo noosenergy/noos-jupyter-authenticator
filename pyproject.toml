@@ -26,9 +26,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 
+[tool.poetry.plugins."jupyterhub.authenticators"] 
+noos-basic = "noos_jupyter_authenticator:NoosBasicAuthenticator"
+noos-jwt = "noos_jupyter_authenticator:NoosJWTAuthenticator"
+
 [tool.poetry.dependencies]
 python = "^3.8"
-jupyterhub = ">=0.8"
+jupyterhub = "^3.0.0"
 noos-pyk = "*"
 tornado = "*"
 traitlets = "*"
