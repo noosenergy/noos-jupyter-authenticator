@@ -2,10 +2,10 @@
 version: 2.1
 
 default:
-  install: &poetry-install
-    pkg-manager: poetry
-    install-args: ''
-  filter: &filter-tags-only
+  install: &poetry_install
+    pkg_manager: poetry
+    install_args: ''
+  filter: &filter_tags_only
     filters:
       tags:
         # ONLY git tag compliant format: e.g. `0.0.1-alpha.01`
@@ -19,7 +19,7 @@ default:
 
 orbs:
 
-  noos-ci: noosenergy/noos-ci@0.1.15
+  noos-ci: noosenergy/noos-ci@0.1.17
 
 
 # --------------
@@ -28,38 +28,46 @@ orbs:
 
 jobs:
 
-  lint-package:
-    executor: noos-ci/default
+  lint_package:
+    executor:
+      name: noos-ci/default
+      tag: 3.11.4
     steps:
       - checkout
-      - noos-ci/python-lint-package:
-          <<: *poetry-install
+      - noos-ci/python_lint_package:
+          <<: *poetry_install
 
-  test-package:
-    executor: noos-ci/default
+  test_package:
+    executor:
+      name: noos-ci/default
+      tag: 3.11.4
     steps:
       - checkout
-      - noos-ci/python-test-package:
-          <<: *poetry-install
+      - noos-ci/python_test_package:
+          <<: *poetry_install
       - store_test_results:
-          path: "."
+          path: ".pytest_results"
 
-  build-wheel:
-    executor: noos-ci/default
+  build_wheel:
+    executor:
+      name: noos-ci/default
+      tag: 3.11.4
     steps:
       - checkout
-      - noos-ci/python-build-wheel:
-          <<: *poetry-install
+      - noos-ci/python_build_wheel:
+          <<: *poetry_install
       - store_artifacts:
           path: dist
           destination: wheel
 
-  publish-wheel:
-    executor: noos-ci/default
+  publish_wheel:
+    executor:
+      name: noos-ci/default
+      tag: 3.11.4
     steps:
       - checkout
-      - noos-ci/python-publish-wheel:
-          <<: *poetry-install
+      - noos-ci/python_publish_wheel:
+          <<: *poetry_install
 
 
 # -----------------
@@ -70,22 +78,22 @@ workflows:
 
   version: 2
 
-  lint-test-build:
+  lint_test_build:
     jobs:
-      - lint-package
-      - test-package
-      - build-wheel:
+      - lint_package
+      - test_package
+      - build_wheel:
           requires:
-            - lint-package
-            - test-package
+            - lint_package
+            - test_package
 
   publish:
     jobs:
-      - approve-for-publishing:
+      - approve_for_publishing:
           type: approval
-          <<: *filter-tags-only
-      - publish-wheel:
+          <<: *filter_tags_only
+      - publish_wheel:
           requires:
-            - approve-for-publishing
+            - approve_for_publishing
           context: PYPI_SHARED
-          <<: *filter-tags-only
+          <<: *filter_tags_only
