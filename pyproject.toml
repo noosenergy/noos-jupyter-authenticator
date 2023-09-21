@@ -5,7 +5,7 @@ build-backend = "poetry.masonry.api"
 [tool.poetry]
 # Description
 name = "noos-jupyter-authenticator"
-version = "0.1.1"
+version = "0.1.2"
 description = "JupyterHub authenticator for the Noos platform."
 # Credentials
 license = "MIT"
@@ -22,12 +22,12 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.11",
     "Typing :: Typed",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 jupyterhub = "^3.0.0"
 noos-pyk = "*"
 tornado = "*"
@@ -51,7 +51,7 @@ ipython = "*"
 
 [tool.black]
 line-length = 99
-target_version = ['py38']
+target_version = ['py311']
 
 [tool.isort]
 line_length = 99
@@ -76,6 +76,6 @@ ignore_missing_imports = true
 python_files = "test_*.py"
 python_classes = "Test"
 python_functions = "test_*"
+pythonpath = ["src"]
 junit_family = "xunit2"
-filterwarnings = "error::RuntimeWarning"
-addopts = "--junitxml=pytest.xml"
+addopts = "--junitxml=.pytest_results/junit.xml"
