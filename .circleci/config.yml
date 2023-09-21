@@ -31,7 +31,6 @@ jobs:
   lint_package:
     executor:
       name: noos-ci/default
-      tag: 3.11.4
     steps:
       - checkout
       - noos-ci/python_lint_package:
@@ -40,7 +39,6 @@ jobs:
   test_package:
     executor:
       name: noos-ci/default
-      tag: 3.11.4
     steps:
       - checkout
       - noos-ci/python_test_package:
@@ -51,7 +49,6 @@ jobs:
   build_wheel:
     executor:
       name: noos-ci/default
-      tag: 3.11.4
     steps:
       - checkout
       - noos-ci/python_build_wheel:
@@ -63,7 +60,6 @@ jobs:
   publish_wheel:
     executor:
       name: noos-ci/default
-      tag: 3.11.4
     steps:
       - checkout
       - noos-ci/python_publish_wheel:
