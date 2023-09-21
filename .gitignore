@@ -22,7 +22,6 @@ pip-wheel-metadata
 
 # PyCharm
 .idea
-.vscode
 
 # MacOS
 .DS_Store

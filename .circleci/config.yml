@@ -4,7 +4,7 @@ version: 2.1
 default:
   install: &poetry_install
     pkg_manager: poetry
-    install_args: ''
+    install_args: --no-ansi --with dev
   filter: &filter_tags_only
     filters:
       tags:
@@ -18,27 +18,22 @@ default:
 # ----------------
 
 orbs:
-
   noos-ci: noosenergy/noos-ci@0.1.17
-
 
 # --------------
 # Pipeline tasks
 # --------------
 
 jobs:
-
   lint_package:
-    executor:
-      name: noos-ci/default
+    executor: noos-ci/default
     steps:
       - checkout
       - noos-ci/python_lint_package:
           <<: *poetry_install
 
   test_package:
-    executor:
-      name: noos-ci/default
+    executor: noos-ci/default
     steps:
       - checkout
       - noos-ci/python_test_package:
@@ -47,8 +42,7 @@ jobs:
           path: ".pytest_results"
 
   build_wheel:
-    executor:
-      name: noos-ci/default
+    executor: noos-ci/default
     steps:
       - checkout
       - noos-ci/python_build_wheel:
@@ -58,20 +52,17 @@ jobs:
           destination: wheel
 
   publish_wheel:
-    executor:
-      name: noos-ci/default
+    executor: noos-ci/default
     steps:
       - checkout
       - noos-ci/python_publish_wheel:
           <<: *poetry_install
-
 
 # -----------------
 # Pipeline workflow
 # -----------------
 
 workflows:
-
   version: 2
 
   lint_test_build:
