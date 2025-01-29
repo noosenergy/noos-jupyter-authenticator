@@ -21,7 +21,7 @@
 			"redhat.vscode-commons",
 			"DavidAnson.vscode-markdownlint",
 			"ms-python.python",
-			"ms-python.isort"
+			"ms-python.ruff"
 		  ],
 		  "settings": {
 			"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"

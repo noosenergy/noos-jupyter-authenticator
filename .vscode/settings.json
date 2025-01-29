@@ -1,17 +1,17 @@
 {
-    "editor.formatOnSave": true,
-    "python.formatting.provider": "black",
-    "python.linting.flake8Enabled": true,
-    "python.linting.pydocstyleEnabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.testing.pytestEnabled": true,
     "[python]": {
-      // Necessity to install VSCode extension 'iSort'
+      "editor.formatOnSave": true,
+      "editor.defaultFormatter": "charliermarsh.ruff",
       "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.fixAll": "explicit",
+        "source.organizeImports": "explicit"
       },
     },
-    "python.terminal.activateEnvironment": false,
     "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.autoImportCompletions": false,
+    "python.testing.pytestEnabled": true,
+    "python.terminal.activateEnvironment": false,
+    // Necessity to install below VSCode extensions
+    "ruff.importStrategy": "fromEnvironment",
+    "mypy-type-checker.importStrategy": "fromEnvironment"
   }
-  
