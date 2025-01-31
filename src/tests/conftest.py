@@ -1,18 +1,16 @@
-from typing import Any, Dict, Optional
+from typing import Any
 from unittest import mock
 
 import pytest
-
 from noos_pyk.clients import http, json
 
-
-Header = Dict[str, str]
-ClaimSet = Dict[str, Any]
+Header = dict[str, str]
+ClaimSet = dict[str, Any]
 
 
 @pytest.fixture
 def mocked_handler(mocker):
-    def _handler_factory(headers: Optional[Header] = None) -> mock.Mock:
+    def _handler_factory(headers: Header | None = None) -> mock.Mock:
         mocked_request = mocker.Mock()
         mocked_request.headers = headers or {}
         mocked_handler = mocker.Mock()
@@ -24,9 +22,7 @@ def mocked_handler(mocker):
 
 @pytest.fixture
 def mocked_client(mocker):
-    def _client_factory(
-        payload: Optional[Dict[str, Any]] = None, raise_error: bool = False
-    ) -> None:
+    def _client_factory(payload: dict[str, Any] | None = None, raise_error: bool = False) -> None:
         mocker.patch.object(json.JSONClient, "_send")
         side_effect = http.HTTPError if raise_error else None
         mocker.patch.object(json.JSONClient, "_check", side_effect=side_effect)
