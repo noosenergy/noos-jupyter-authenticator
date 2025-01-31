@@ -2,7 +2,9 @@ from typing import Any
 from unittest import mock
 
 import pytest
+
 from noos_pyk.clients import http, json
+
 
 Header = dict[str, str]
 ClaimSet = dict[str, Any]

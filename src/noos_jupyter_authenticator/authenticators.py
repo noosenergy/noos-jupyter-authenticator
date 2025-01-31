@@ -1,12 +1,14 @@
 from typing import TypedDict
 
 from jupyterhub import auth, handlers, utils
-from noos_pyk.clients import http
 from tornado import gen, web
 from traitlets import Unicode
 
+from noos_pyk.clients import http
+
 from .clients import NoosGatewayClient
 from .handlers import NoosLoginHandler
+
 
 __all__ = ["NoosBasicAuthenticator", "NoosJWTAuthenticator"]
 
