@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple, TypedDict
+from typing import TypedDict
 
 from jupyterhub import auth, handlers, utils
 from tornado import gen, web
@@ -13,12 +13,12 @@ from .handlers import NoosLoginHandler
 __all__ = ["NoosBasicAuthenticator", "NoosJWTAuthenticator"]
 
 
-UrlHandler = Tuple[str, handlers.BaseHandler]
+UrlHandler = tuple[str, handlers.BaseHandler]
 
 
 class UserInfo(TypedDict):
     name: str
-    admin: Optional[bool]
+    admin: bool | None
 
 
 class NoosAuthenticator(auth.Authenticator):
@@ -36,13 +36,13 @@ class NoosAuthenticator(auth.Authenticator):
     def login_url(self, base_url: str) -> str:
         return utils.url_path_join(base_url, self.auth_path)
 
-    def get_handlers(self, *args) -> List[UrlHandler]:
+    def get_handlers(self, *args) -> list[UrlHandler]:
         # Combine a raw-string for regex with a f-string for interpolation
         return [(rf"{self.auth_path}", self.login_handler)]
 
     # Implement authenticator's main co-routine
     @gen.coroutine
-    def authenticate(self, handler: web.RequestHandler, *args) -> Optional[UserInfo]:
+    def authenticate(self, handler: web.RequestHandler, *args) -> UserInfo | None:
         raise NotImplementedError
 
 
@@ -59,7 +59,7 @@ class NoosBasicAuthenticator(NoosAuthenticator):
     )
 
     @gen.coroutine
-    def authenticate(self, handler: web.RequestHandler, *args) -> Optional[UserInfo]:
+    def authenticate(self, handler: web.RequestHandler, *args) -> UserInfo | None:
         header = handler.request.headers.get(self.auth_header_name)
         if not header:
             return None
@@ -106,7 +106,7 @@ class NoosJWTAuthenticator(NoosAuthenticator):
     )
 
     @gen.coroutine
-    def authenticate(self, handler: web.RequestHandler, *args) -> Optional[UserInfo]:
+    def authenticate(self, handler: web.RequestHandler, *args) -> UserInfo | None:
         """Authenticate the request and return a UserInfo dict."""
         header = handler.request.headers.get(self.auth_header_name)
         if not header:

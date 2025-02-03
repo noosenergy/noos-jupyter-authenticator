@@ -1,5 +1,5 @@
 from http import client as http_client
-from typing import Any, Dict
+from typing import Any
 
 from noos_pyk.clients import auth, json
 
@@ -16,6 +16,6 @@ class NoosGatewayClient(json.JSONClient, auth.AuthClient):
 
     default_auth_class = NoosGatewayAuth
 
-    def whoami(self) -> Dict[str, Any]:
+    def whoami(self) -> dict[str, Any]:
         """Return infos about the authenticated user."""
         return self.get(path="v1/accounts/whoami/", statuses=(http_client.OK,))
