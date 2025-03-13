@@ -4,8 +4,13 @@
 	"name": "noos-jupyter-authenticator",
     "runArgs": [
         "--name",
-        "noos-jupyter-authenticator_devcontainer"
+        "noos-jupyter-authenticator_devcontainer",
+        "--env-file",
+        "${localWorkspaceFolder}/.env"
     ],
+    "remoteEnv": {
+        "PATH": "${containerEnv:PATH}:${containerWorkspaceFolder}/.venv/bin"
+    },
 
 	// Docker image setup
 	"image": "noosenergy/circleci",
@@ -25,7 +30,8 @@
             "ms-python.mypy-type-checker"
 		  ],
 		  "settings": {
-			"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+			"python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python",
+			"terminal.integrated.defaultProfile.linux": "bash"
 		  }
 		}
 	},
