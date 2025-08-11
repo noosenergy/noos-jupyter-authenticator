@@ -17,6 +17,16 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/home/circleci/project,type=bind,consistency=cached",
 	"workspaceFolder": "/home/circleci/project",
 
+        "features": {
+            "ghcr.io/devcontainers/features/common-utils": {
+                "installZsh": true,
+                "installOhMyZsh": true,
+                "installOhMyZshConfig": true,
+                "configureZshAsDefaultShell": true
+            }
+        },
+
+
     // Text editor setup
 	"customizations": {
 		"vscode": {
@@ -36,5 +46,5 @@
 		}
 	},
 
-    "onCreateCommand": "poetry install"
+    "onCreateCommand": "sh ${containerWorkspaceFolder}/.devcontainer/post-create.sh"
 }
