@@ -32,10 +32,10 @@ c.NoosJWTAuthenticator.auth_server_url = "http://<hostname>"
 
 ### Python package manager
 
-On Mac OSX, make sure [poetry](https://python-poetry.org/) has been installed and pre-configured,
+On Mac OSX, make sure [uv](https://docs.astral.sh/uv/) has been installed and pre-configured,
 
 ```sh
-brew install poetry
+brew install uv
 ```
 
 ### Local dev workflows
