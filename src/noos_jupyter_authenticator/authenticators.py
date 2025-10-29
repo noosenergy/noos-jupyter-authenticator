@@ -138,11 +138,20 @@ class NoosJWTAuthenticator(NoosAuthenticator):
         except http.HTTPError:
             raise web.HTTPError(401, "Invalid decoded JWT.")
 
+        if not isinstance(claims, dict):
+            raise TypeError(f"Expected dict response from whoami, got {type(claims)}")
+
+        admin = claims.get(self.admin_claim_field)
         name = claims.get(self.name_claim_field)
+
         if not name:
             raise web.HTTPError(401, "Missing name claim field.")
+        if not isinstance(name, str):
+            raise TypeError(f"Expected name to be str, got {type(name)}")
+        if not (admin is None or isinstance(admin, bool)):
+            raise TypeError(f"Expected admin to be bool|None, got {type(admin)}")
 
         return {
             "name": name,
-            "admin": claims.get(self.admin_claim_field),
+            "admin": admin,
         }
