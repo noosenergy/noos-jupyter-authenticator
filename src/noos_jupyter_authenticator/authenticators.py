@@ -31,6 +31,7 @@ class NoosAuthenticator(auth.Authenticator):
     login_service = "Noos Gateway"
 
     auth_path = "/auto_login"
+    allow_all = True
 
     # Register a custom handler and its URL
     def login_url(self, base_url: str) -> str:
