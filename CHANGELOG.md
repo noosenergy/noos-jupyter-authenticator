@@ -29,3 +29,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Use ruff linter.
+
+## [0.3.0] - 2025-10-29
+
+### Changed
+
+- Migrate project from Poetry to UV for dependency management

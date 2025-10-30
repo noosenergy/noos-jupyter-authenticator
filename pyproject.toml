@@ -1,49 +1,44 @@
 [build-system]
-requires = ["poetry>=1.0.0"]
-build-backend = "poetry.masonry.api"
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
 
-[tool.poetry]
-# Description
+[project]
 name = "noos-jupyter-authenticator"
-version = "0.2.1"
+version = "0.3.0"
 description = "JupyterHub authenticator for the Noos platform."
-# Credentials
-license = "MIT"
-authors = ["Noos Energy <contact@noos.energy>"]
-homepage = "https://github.com/noosenergy/noos-jupyter-authenticator"
-# Package data
 readme = "README.md"
-packages = [
-    { include = "noos_jupyter_authenticator", from = "src" },
+license = { text = "MIT" }
+authors = [
+    { name = "Noos Energy", email = "contact@noos.energy" },
 ]
-# Distribution
+requires-python = ">=3.12,<3.13"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
     "Typing :: Typed",
 ]
+dependencies = [
+    "jupyterhub>=3.0.0",
+    "noos-pyk",
+    "tornado>=6.0.0",
+    "traitlets>=5.0.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-jupyterhub = "^3.0.0"
-noos-pyk = "*"
-tornado = "*"
-traitlets = "*"
-
-[tool.poetry.dev-dependencies]
-# Linter
-ruff = "*"
-mypy = "*"
-# Testing
-pytest = "*"
-pytest-mock = "*"
-pytest-asyncio = "*"
-# Debugging
-ipdb = "*"
-ipython = "*"
+[dependency-groups]
+dev = [
+    # Linter
+    "ruff>=0.9.3",
+    "mypy>=1.0.0",
+    # Testing
+    "pytest>=8.0.0",
+    "pytest-mock>=3.0.0",
+    "pytest-asyncio>=1.2.0",
+    # Debugging
+    "ipdb>=0.13.0",
+    "ipython>=8.0.0",
+]
 
 [tool.ruff]
 line-length = 99
