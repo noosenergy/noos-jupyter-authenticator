@@ -35,3 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Migrate project from Poetry to UV for dependency management
+
+## [0.3.1] - 2026-04-08
+
+### Changed
+
+-   Update whoami endpoint URL to include internal prefix
