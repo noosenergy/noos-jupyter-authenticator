@@ -17,4 +17,4 @@ class NoosGatewayClient(json.JSONClient, auth.AuthClient):
 
     def whoami(self) -> json.Json:
         """Return infos about the authenticated user."""
-        return self.get(path="v1/accounts/whoami/", statuses=(http_client.OK,))
+        return self.get(path="internal/v1/accounts/whoami/", statuses=(http_client.OK,))
